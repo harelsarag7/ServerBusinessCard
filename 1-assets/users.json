@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "firstName": "guy",
+    "lastName": "ml",
+    "username": "gml",
+    "email": "guy@mevorach.dev",
+    "password": "1234",
+    "role": 0
+  },
+  {
+    "firstName": "guy",
+    "lastName": "ml",
+    "username": "gml11",
+    "email": "guy@mevorach.dev",
+    "password": "1234",
+    "id": 2,
+    "role": 1
+  }
+]

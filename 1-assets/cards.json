@@ -1,0 +1,29 @@
+[
+  {
+    "id": 7,
+    "businessName": "harel",
+    "businessDescription": "Fullstack",
+    "phone": "0547716565",
+    "image": {},
+    "email": "harelsarag7@gmail.com",
+    "template": 1
+  },
+  {
+    "id": 8,
+    "businessName": "harel8",
+    "businessDescription": "888",
+    "phone": "888",
+    "image": {},
+    "email": "info@e-shop.co.il",
+    "template": 2
+  },
+  {
+    "id": 9,
+    "businessName": "9999",
+    "businessDescription": "999",
+    "phone": "999",
+    "image": {},
+    "email": "harelsarag7@gmail.com",
+    "template": 3
+  }
+]
