@@ -1,15 +1,18 @@
 import express from 'express';
+// import { addUser, getUser, getUsers } from '../5-logic/users-logic';
 import { addUser, getUser, getUsers } from '../5-logic/users-logic';
 import { BadCredentialsError } from '../4-models/BadCredentials';
 import { generateToken } from '../2-utils/jwt';
 import { ResourceNotFoundError } from '../4-models/ResourceNotFoundError';
+import { UserModel } from '../4-models/UserModel';
 
 export const authRouter = express.Router();
 
 authRouter.post('/auth/register', async (req, res, next) => {
-    const user = req.body;
-    await addUser(user);
-
+    const {firstName, lastName, email, phone, username, password} = req.body;
+    const result = await addUser(firstName, lastName, email, phone, username, password);
+    let id = result.id
+    const user: UserModel = {id, firstName, lastName, email, phone, username, password}
     const token = generateToken(user);
     res.status(201).send(token);
 });

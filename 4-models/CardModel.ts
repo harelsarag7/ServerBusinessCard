@@ -3,16 +3,19 @@ import { ValidationError } from './ValidationError';
 
 export interface CardModel {
     id: number;
-    businessName?: string;
+    userId: number;
+    templateNum: number;
+    businessName: string;
     businessDescription?: string;
-    image?: File;
-    phone?: string
-    email?: string;
+    phone: string
+    email: string;
     instagram?: string;
     facebook?: string;
+    twitter?: string;
+    github?: string;
     location?: string;
     website?: string;
-    template?: number;
+    image?: string;
 }
 
 export const productSchema = z.object({
