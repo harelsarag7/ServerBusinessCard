@@ -13,8 +13,23 @@
     "lastName": "ml",
     "username": "gml11",
     "email": "guy@mevorach.dev",
-    "password": "1234",
+    "password": "12345",
     "id": 2,
+    "role": 1
+  },
+  {
+    "firstName": "123",
+    "lastName": "123",
+    "username": "123",
+    "email": "harel@harel.com",
+    "password": "123",
+    "id": 3,
+    "role": 1
+  },
+  {
+    "username": "1234",
+    "password": "1234",
+    "id": 4,
     "role": 1
   }
 ]
