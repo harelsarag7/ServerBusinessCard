@@ -29,7 +29,6 @@ import mysql, { RowDataPacket } from "mysql2";
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'harelsa123',
     port: 3306,
     database: 'businesscard',
     // waitForConnections: true,
