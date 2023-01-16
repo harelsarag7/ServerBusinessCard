@@ -1,5 +1,6 @@
 // import { dal } from "../2-utils/dal";
 import { OkPacket } from "mysql2/promise";
+import * as path from "path";
 import { execute } from "../2-utils/dal";
 import { CardModel } from "../4-models/CardModel";
 
@@ -13,8 +14,8 @@ export async function getCards(): Promise<CardModel[]>{
     return rows
 }
 export async function getAllUserCards(userid: number): Promise<CardModel[]>{
-    const query = `SELECT * FROM businesscard.cards WHERE userid = ${userid}`;
-    const [rows] = await execute<CardModel[]>(query);
+    const query = "SELECT * FROM businesscard.cards WHERE userid = ?";
+    const [rows] = await execute<CardModel[]>(query, [userid]);
     return rows
 }
 
@@ -22,26 +23,21 @@ export async function getCardById(id: number): Promise<CardModel>{
     const query = "SELECT * FROM businesscard.cards WHERE id = ?";
     const [rows] = await execute<CardModel[]>(query, [id]);
     if(rows.length === 0) return null;
+    // rows[0].image = path.resolve('1-assets/' + rows[0].image)
+    
     return rows[0];
 }
-// export async function getCard(id: number) {
-//     // Get all cards
-//     const cards = await getCards();
-//     // Find specific cards
-//     const card = cards.find(c => c.id === id);
-//     if (!card) throw new Error();
-//     return card;
-// }
 
-export async function addCard( userid: number, businessName: string, businessDescription: string,  phone: string, email, template: number){
-    // const query = "INSERT INTO businesscard.cards( userid, templateNum, businessName, businessDescription, phone, email ) VALUES('?', '?', '?', '?','?', '?'); ";
-    const query = `INSERT INTO businesscard.cards( userid, templateNum, businessName, businessDescription, phone, email ) VALUES('${userid}', '${template}', '${businessName}', '${businessDescription}','${phone}', '${email}'); `;
-
-    const [results] = await execute<OkPacket>(query)
-    // const [results] = await execute<OkPacket>(query, [userid, template, businessName, businessDescription, phone, email ])
-    console.log(results);
+// export async function getImageByCard(id:number) {
+    // rows[0].image = path.resolve('1-assets/' + rows[0].image)
     
-    // const [rows] = await execute<CardModel[]>(query);
+// }
+export async function addCard( userid: number, businessName: string, businessDescription: string, image: string,  phone: string, email: string, location: string, template: number, website: string, facebook: string){
+    const query = "INSERT INTO businesscard.cards( userid, businessName, businessDescription, phone, email, location, templateNum, website, facebook , image ) VALUES(?,?, ?, ?, ?,?, ?, ?,?, ?); ";
+    
+    // const query = `INSERT INTO businesscard.cards( userid, templateNum, businessName, businessDescription, phone, email, location, website, facebook ) VALUES('${userid}', '${template}', '${businessName}', '${businessDescription}','${phone}', '${email}', '${location}', '${website}', '${facebook}'); `;
+    const [results] = await execute<OkPacket>(query, [userid, businessName, businessDescription, phone, email, location, template, website, facebook,image])
+    // console.log(results);
     const id = results.insertId;
     return {
         id,
@@ -49,49 +45,20 @@ export async function addCard( userid: number, businessName: string, businessDes
         template,
         businessName,
         businessDescription,
+        image,
         phone,
         email,
 
     };
 }
 
-// export async function addCard(businessName: string, businessDescription: string, image: File, phone: string, email: string, template: number) {
-//     // get all cards
-//     const cards = await getCards();
-
-//     // add the new card to the cards array
-//     const id = Math.max(...cards.map(c => c.id)) + 1;
-//     const card: CardModel = {
-//         id,
-//         businessName,
-//         businessDescription,
-//         phone,
-//         image,
-//         email,
-//         template
-        
-//     };
-//     cards.push(card);
-
-//     // save all cards
-//     await dal.saveAllCards(cards);
-
-//     return card;
-// }
-
-
-
-
 
 export async function deleteCard(id: number) {
-    // get all cards
-    let cards = await getCards();
+    // const query = `INSERT INTO businesscard.cards( userid ) VALUES('${id}'); `;
+    const query = `DELETE FROM businesscard.cards WHERE id = ?; `;
+    const [results] = await execute<OkPacket>(query,[id])
+    // console.log(results);
 
-    // delete the card
-    cards = cards.filter(c => c.id !== id);
-
-    // save cards
-    // await dal.saveAllCards(cards);
 }
 
 

@@ -5,12 +5,16 @@ import { saturdayForbidden } from './3-middleware/saturday';
 import { authRouter } from './6-controllers/auth-controller';
 import { cardsRouter } from './6-controllers/cards-controller';
 import cors from "cors" 
+import * as dotenv from 'dotenv'
+import fileUpload from 'express-fileupload';
+dotenv.config({ path: process.env.NODE_ENV === "dev" ? ".env" : ".env.prod" });
+
 
 const server = express();
-
 server.use(cors())
 /* server.use(saturdayForbidden);*/ 
 server.use(json());
+server.use(fileUpload())
 server.use(logRequest);
 
 server.use('/api', cardsRouter);
@@ -18,6 +22,6 @@ server.use('/api', authRouter);
 
 server.use(catchAll);
 
-server.listen(3040, () => {
-    console.log('Listening on port 3040...');
+server.listen(process.env.PORT, () => {
+    console.log(`Listening on port ${process.env.PORT}...`);
 });

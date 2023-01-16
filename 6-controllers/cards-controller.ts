@@ -1,9 +1,12 @@
 import express from 'express';
+import { UploadedFile } from 'express-fileupload';
+import * as path from 'path';
 import { verifyUser } from '../3-middleware/verifyUser';
 import { CardModel, productValidation } from '../4-models/CardModel';
 import { ResourceNotFoundError } from '../4-models/ResourceNotFoundError';
 import { UserRole } from '../4-models/UserModel';
 import { getCardById, getCards, addCard, updateCard, deleteCard, getAllUserCards } from '../5-logic/cards-logic';
+import fs from 'fs'
 
 export const cardsRouter = express.Router();
 
@@ -17,6 +20,7 @@ cardsRouter.get('/cards', async (req, res, next) => {
     }
 });
 
+
 cardsRouter.get('/cards/:userid', async (req, res, next) => {
     const userid = +req.params.userid;
     try {
@@ -27,39 +31,75 @@ cardsRouter.get('/cards/:userid', async (req, res, next) => {
     }
 });
 
+
+
 cardsRouter.get('/card/:id([0-9]+)', async (req, res, next) => {
     try {
         const id = req.params.id;
         const card = await getCardById(+id);
-        // console.log(card);
-        
-        res.json(card);
+        res.json(card)
+    } catch (e) {
+        next(new ResourceNotFoundError());
+    }
+});
+cardsRouter.get('/card/image/:id([0-9]+)', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const card = await getCardById(+id);
+        res.sendFile(path.join(__dirname, '..', '1-assets', 'images', id + path.extname(card.image)) )
     } catch (e) {
         next(new ResourceNotFoundError());
     }
 });
 
 
+
+
+cardsRouter.post('/uploadFile', async (req, res) => {
+    if (!req.files) {
+        return res.status(400).send('No files were uploaded.');
+    }
+    const image = req.files['file'] as UploadedFile;
+    
+    if (!image) {
+        return res.status(400).send('No image was uploaded.');
+    }
+    if(image.size === 0) {
+        return res.status(400).send('File is empty')
+    }
+    image.mv(path.resolve(__dirname, '..', '1-assets', 'images', image.name));
+    
+});
+
+
 // have to change the validation
 // cardsRouter.post('/cards', verifyUser([UserRole.Admin]), productValidation, async (req, res) => {
 cardsRouter.post('/cards', async (req, res) => {
-    // const userid = req.body.id;
+    console.log(req.files);
     const userid = +req.body.userid;
     console.log(userid);
-    
     const businessName = req.body.businessName;
     const businessDescription = req.body.businessDescription;
-    // const image = req.body.image;
+    const image = req.body.image;
     const phone = req.body.phone;
     const email = req.body.email;
     const templateNum = +req.body.templateNum;
-    // const price = req.body.price;
-    // if (!name || !price) {
-    //     res.status(400).send('Missing name or price');
-    //     return;
-    // }
+    const website = req.body.website;
+    const location = req.body.location;
+    const facebook = req.body.facebook;
 
-    const card = await addCard(userid, businessName, businessDescription, phone, email, templateNum);
+    const card = await addCard(userid, businessName, businessDescription, image, phone, email,location, templateNum, website, facebook);
+    
+    const imagePath = path.join(__dirname, '..', '1-assets', 'images', image);
+    
+
+
+    fs.access('C:\\Users\\97254\\Documents\\GitHub\\ServerBusinessCard\\1-assets\\images\\' + image, fs.constants.F_OK, (err) => {
+          let newName = 'C:\\Users\\97254\\Documents\\GitHub\\ServerBusinessCard\\1-assets\\images\\' +`${card.id}${path.extname(imagePath)}`;
+            fs.rename('C:\\Users\\97254\\Documents\\GitHub\\ServerBusinessCard\\1-assets\\images\\' + image, newName, (err) => {
+              console.log('File Renamed!');
+            });
+      });
     res.status(201).json(card);
 }
 );

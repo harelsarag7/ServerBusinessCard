@@ -6,11 +6,11 @@ export enum UserRole {
 
 export interface UserModel {
     id: number;
-    firstName: string;
-    lastName: string;
+    firstName?: string;
+    lastName?: string;
     username: string;
-    email: string;
-    password: string;
-    phone: string;
+    email?: string;
+    password?: string;
+    phone?: string;
     role?: UserRole;
 }

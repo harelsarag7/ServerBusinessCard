@@ -4,7 +4,7 @@ import { UserModel } from "../4-models/UserModel";
 export function generateToken(user: UserModel) {
     return sign({
         "sub": user.id,
-        "role": user.role,
+        // "role": user.role,
         "username": user.username,
         "email": user.email
     }, user.password, { expiresIn: '2h' });
